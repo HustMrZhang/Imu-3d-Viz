@@ -272,9 +272,8 @@ int main(int argc, char** argv) {
 	init_font();
 
 	FILE *fp;
-	//fp=fopen("log.txt", "r");
-	//fp=fopen("/Volumes/UNTITLED/log.txt", "r");
-	fp=fopen("/dev/cu.usbmodem1", "r");
+	fp=fopen("sample.log", "r");
+	//fp=fopen("/dev/cu.usbmodem1", "r");
 
 
 	GLuint ship = load_model("ship.model");
