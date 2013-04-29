@@ -4,10 +4,17 @@ COMPILER = gcc
 GCFLAGS = -O2 -std=gnu99 
 GCFLAGS += -Wno-strict-aliasing -Wstrict-prototypes -Wundef -Wall -Wextra  
 GCFLAGS += -fstrict-aliasing -funsigned-char
+GCFLAGS += -lSDLmain -lSDL -lSDL_image 
 
+UNAME := $(shell uname)
 
+ifeq ($(UNAME), Darwin)
+	GCFLAGS+= -framework Cocoa -framework OpenGL -L/usr/X11/lib/
+endif
 
-GCFLAGS+=-lSDLmain -lSDL -lSDL_image -framework Cocoa -framework OpenGL -L/usr/X11/lib/
+ifeq ($(UNAME), Linux)
+	GCFLAGS+= -lGL -lGLU
+endif
 
 
 all: ship
