@@ -278,7 +278,9 @@ int main(int argc, char** argv) {
 
 	GLuint ship = load_model("ship.model");
 
+	float tick_diff = 0.0f;
 	int running = 1;
+	int pause = 0;
 	while (running) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
@@ -291,11 +293,25 @@ int main(int argc, char** argv) {
 						case SDLK_ESCAPE:
 							running = 0;
 							break;
+						case SDLK_SPACE:
+							if(pause)
+							{
+								pause = 0;
+							}
+							else
+							{
+								pause = 1;
+							}
+							break;
 						default: break;
 					}
 			}
 		}
 
+		if(pause)
+		{
+			continue;
+		}
 
 		float tick=0;
 		float q0=0;
@@ -309,8 +325,16 @@ int main(int argc, char** argv) {
 		float gyro_y=0;
 		float gyro_z=0;
 
-		fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z);
+		int i = fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z);
 
+		if(i==-1)
+		{
+			SDL_Quit();
+			return 0;
+		}
+
+		if(tick_diff == 0.0f)
+			tick_diff = (tick*1000)-SDL_GetTicks();
 
 		float yaw=0;
 		float pitch=0;
@@ -339,11 +363,15 @@ int main(int argc, char** argv) {
 		glColor3f(1, 1, 1);
 		print(10, 10, "Gyro  X:%5.2f Y:%5.2f Z:%5.2f", gyro_x,gyro_y,gyro_z);
 		print(10, 20, "ACC   X:%5.2f Y:%5.2f Z:%5.2f", acc_x,acc_y,acc_z);
-		print(10, 50, "Euler X:%5.2f Y:%5.2f Z:%5.2f", pitch,roll,yaw);
-		print(10, 70, "Timecode %i", tick/10);
+		print(10, 50, "Euler P:%5.0f R:%5.0f Y:%5.0f", pitch/M_PI*180,roll/M_PI*180,yaw/M_PI*180);
+		print(10, 70, "Timecode %.2f", tick);
 
 		SDL_GL_SwapBuffers();
-		SDL_Delay(25);
+
+		Uint32 lastFrame = SDL_GetTicks(); 
+		if((((tick*1000)-lastFrame)-tick_diff) > 0)
+			SDL_Delay(((tick*1000)-lastFrame)-tick_diff);
+
 	}
 
 	SDL_Quit();
