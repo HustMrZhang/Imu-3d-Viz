@@ -324,8 +324,18 @@ int main(int argc, char** argv) {
 		float gyro_x=0;
 		float gyro_y=0;
 		float gyro_z=0;
+		float ch1=0;
+		float ch2=0;
+		float ch3=0;
+		float ch4=0;
+		float ap_roll = 0.0f;
+		float ap_nick = 0.0f;
 
-		int i = fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z);
+
+		int i = fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %*f %*f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z,&ch1,&ch2,&ch3,&ch4,&ap_roll,&ap_nick);
+		//int i = fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z);
+		
+		printf("%f\n",tick);
 
 		if(i==-1)
 		{
@@ -364,7 +374,18 @@ int main(int argc, char** argv) {
 		print(10, 10, "Gyro  X:%5.2f Y:%5.2f Z:%5.2f", gyro_x,gyro_y,gyro_z);
 		print(10, 20, "ACC   X:%5.2f Y:%5.2f Z:%5.2f", acc_x,acc_y,acc_z);
 		print(10, 50, "Euler P:%5.0f R:%5.0f Y:%5.0f", pitch/M_PI*180,roll/M_PI*180,yaw/M_PI*180);
-		print(10, 70, "Timecode %.2f", tick);
+		print(10, 70, "Stick Gas:%3.0f Elev:%5.0f Ail:%5.0f", (ch1+1)*50,ch2*100,ch3*100);
+		if(ch4 >= 0.2f)
+		{
+			print(10, 80, "Mode: Stab  Elev: %f  Ail: %f",ap_roll,ap_nick);
+		}
+		else
+		{
+			print(10, 80, "Mode: Free");
+		}
+
+
+		print(10, 90, "Timecode %.2f", tick);
 
 		SDL_GL_SwapBuffers();
 
