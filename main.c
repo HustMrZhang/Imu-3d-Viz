@@ -33,6 +33,7 @@ void init_font(void) {
 	for(i = 0; i < 128; i++) {
 
 		glNewList(char_base + i, GL_COMPILE);
+		//glColor3f(1, 0, 1);
 
 		int c = i - 32;
 		if(c >= 0 && c < 96) {
@@ -77,6 +78,11 @@ void print(int x, int y, const char* text, ...) {
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslated(x, y, 0);
+		
+		
+	//glColor3f(1, 0, 1);
+	//glCallLists(strlen(line), GL_BYTE, line);
+	//glColor3f(1, 1, 1);
 
 	glCallLists(strlen(line), GL_BYTE, line);
 
@@ -257,7 +263,7 @@ int main(int argc, char** argv) {
 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST );
 
 	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POLYGON_SMOOTH);
+//	glEnable(GL_POLYGON_SMOOTH);//looks very ugly on max osx
 
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_COLOR_MATERIAL);
@@ -328,11 +334,22 @@ int main(int argc, char** argv) {
 		float ch2=0;
 		float ch3=0;
 		float ch4=0;
+		float ch5=0;
+		float ch6=0;
+		float ch7=0;
+		float ch8=0;
 		float ap_roll = 0.0f;
 		float ap_nick = 0.0f;
 
+		float roll_p = 0;
+		float roll_i = 0;
+		float roll_d = 0;
+		float nick_p = 0;
+		float nick_i = 0;
+		float nick_d = 0;
 
-		int i = fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %*f %*f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z,&ch1,&ch2,&ch3,&ch4,&ap_roll,&ap_nick);
+
+		int i = fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z,&ch1,&ch2,&ch3,&ch4,&ch5,&ch6,&ch7,&ch8,&ap_roll,&ap_nick,&nick_p,&nick_i,&nick_d,&roll_p,&roll_i,&roll_d);
 		//int i = fscanf(fp,"[%f] %f %f %f %f %f %f %f %f %f %f\n",&tick,&q0,&q1,&q2,&q3,&acc_x,&acc_y,&acc_z,&gyro_x,&gyro_y,&gyro_z);
 		
 		printf("%f\n",tick);
@@ -372,20 +389,22 @@ int main(int argc, char** argv) {
 
 		glColor3f(1, 1, 1);
 		print(10, 10, "Gyro  X:%5.2f Y:%5.2f Z:%5.2f", gyro_x,gyro_y,gyro_z);
-		print(10, 20, "ACC   X:%5.2f Y:%5.2f Z:%5.2f", acc_x,acc_y,acc_z);
-		print(10, 50, "Euler P:%5.0f R:%5.0f Y:%5.0f", pitch/M_PI*180,roll/M_PI*180,yaw/M_PI*180);
-		print(10, 70, "Stick Gas:%3.0f Elev:%5.0f Ail:%5.0f", (ch1+1)*50,ch2*100,ch3*100);
+		print(10, 25, "ACC   X:%5.2f Y:%5.2f Z:%5.2f", acc_x,acc_y,acc_z);
+		print(10, 40, "Euler P:%5.0f R:%5.0f Y:%5.0f", pitch/M_PI*180,roll/M_PI*180,yaw/M_PI*180);
+		print(300, 10, "Stick Gas:%3.0f Elev:%5.0f Ail:%5.0f", (ch1+1)*50,ch2*100,ch3*100);
+		print(300, 25, "ch4:%7.2f ch5:%7.2f ch6:%7.2f ch7:%7.2f ch8:%7.2f", ch4*100,ch5*100,ch6*100,ch7*100,ch8*100);
 		if(ch4 >= 0.2f)
 		{
-			print(10, 80, "Mode: Stab  Elev: %f  Ail: %f",ap_roll,ap_nick);
+			print(300, 40, "Mode: Stab  Elev: %6.3f  Ail: %6.3f",ap_roll,ap_nick);
+			print(300, 55, "Roll P:%5.2f I:%5.2f D:%5.2f  Nick P:%5.2f I:%5.2f D:%5.2f",nick_p,nick_i,nick_d,roll_p,roll_i,roll_d);
 		}
 		else
 		{
-			print(10, 80, "Mode: Free");
+			print(300, 40, "Mode: Free");
 		}
 
 
-		print(10, 90, "Timecode %.2f", tick);
+		print(10, 55, "Timecode %.2f", tick);
 
 		SDL_GL_SwapBuffers();
 
