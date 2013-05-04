@@ -33,7 +33,8 @@ void init_font(void) {
 	for(i = 0; i < 128; i++) {
 
 		glNewList(char_base + i, GL_COMPILE);
-		//glColor3f(1, 0, 1);
+		
+		glColor3f(1, 1, 1);
 
 		int c = i - 32;
 		if(c >= 0 && c < 96) {
@@ -48,15 +49,15 @@ void init_font(void) {
 			glTexCoord2f(tx, ty);
 			glVertex2d(0, 0);
 			glTexCoord2f(tx + sx, ty);
-			glVertex2d(8, 0);
+			glVertex2d(12, 0);
 			glTexCoord2f(tx + sx, ty + sy);
-			glVertex2d(8, 8);
+			glVertex2d(12, 12);
 			glTexCoord2f(tx, ty + sy);
-			glVertex2d(0, 8);
+			glVertex2d(0, 12);
 			glEnd();
 		}
 
-		glTranslatef(8, 0, 0);
+		glTranslatef(12, 0, 0);
 		glEndList();
 	}
 }
@@ -73,7 +74,7 @@ void print(int x, int y, const char* text, ...) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, 800, 600, 0, -1, 1);
+	glOrtho(0, 1280, 720, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
@@ -250,9 +251,9 @@ int main(int argc, char** argv) {
 
 
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_Surface *surface = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL);
+	SDL_Surface *surface = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL);
 
-	glClearColor(0, 0, 0, 0);
+	glClearColor(0, 1, 0, 0);
 	glClearDepth(1);
 	glEnable(GL_DEPTH_TEST);
 
@@ -272,7 +273,7 @@ int main(int argc, char** argv) {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(25, 800.0 / 600.0, 0.6, 100);
+	gluPerspective(25, 1280.0 / 720.0, 0.6, 100);
 	glMatrixMode(GL_MODELVIEW);
 
 	init_font();
@@ -373,8 +374,9 @@ int main(int argc, char** argv) {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
-
-		glTranslatef(0, 0, -10); //unzoom
+	
+		glTranslated(3.5f,-2.5f, 0);
+		glTranslatef(0, 0, -15); //unzoom
 
 		float x,y,z;
 		float angle;
@@ -391,16 +393,16 @@ int main(int argc, char** argv) {
 		print(10, 10, "Gyro  X:%5.2f Y:%5.2f Z:%5.2f", gyro_x,gyro_y,gyro_z);
 		print(10, 25, "ACC   X:%5.2f Y:%5.2f Z:%5.2f", acc_x,acc_y,acc_z);
 		print(10, 40, "Euler P:%5.0f R:%5.0f Y:%5.0f", pitch/M_PI*180,roll/M_PI*180,yaw/M_PI*180);
-		print(300, 10, "Stick Gas:%3.0f Elev:%5.0f Ail:%5.0f", (ch1+1)*50,ch2*100,ch3*100);
-		print(300, 25, "ch4:%7.2f ch5:%7.2f ch6:%7.2f ch7:%7.2f ch8:%7.2f", ch4*100,ch5*100,ch6*100,ch7*100,ch8*100);
-		if(ch4 >= 0.2f)
+		print(400, 10, "Stick Gas:%3.0f Elev:%5.0f Ail:%5.0f", (ch1+1)*50,ch2*100,ch3*100);
+		print(400, 25, "ch4:%7.2f ch5:%7.2f ch6:%7.2f ch7:%7.2f ch8:%7.2f", ch4*100,ch5*100,ch6*100,ch7*100,ch8*100);
+		if(ch4 >= -0.2f)
 		{
-			print(300, 40, "Mode: Stab  Elev: %6.3f  Ail: %6.3f",ap_roll,ap_nick);
-			print(300, 55, "Roll P:%5.2f I:%5.2f D:%5.2f  Nick P:%5.2f I:%5.2f D:%5.2f",nick_p,nick_i,nick_d,roll_p,roll_i,roll_d);
+			print(400, 40, "Mode: Stab  Elev: %6.3f  Ail: %6.3f",ap_roll,ap_nick);
+			print(400, 55, "Roll P:%5.2f I:%5.2f D:%5.2f  Nick P:%5.2f I:%5.2f D:%5.2f",nick_p,nick_i,nick_d,roll_p,roll_i,roll_d);
 		}
 		else
 		{
-			print(300, 40, "Mode: Free");
+			print(400, 40, "Mode: Free");
 		}
 
 
