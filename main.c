@@ -397,8 +397,8 @@ int main(int argc, char** argv) {
 		print(400, 25, "ch4:%7.2f ch5:%7.2f ch6:%7.2f ch7:%7.2f ch8:%7.2f", ch4*100,ch5*100,ch6*100,ch7*100,ch8*100);
 		if(ch4 >= -0.2f)
 		{
-			print(400, 40, "Mode: Stab  Elev: %6.3f  Ail: %6.3f",ap_roll,ap_nick);
-			print(400, 55, "Roll P:%5.2f I:%5.2f D:%5.2f  Nick P:%5.2f I:%5.2f D:%5.2f",nick_p,nick_i,nick_d,roll_p,roll_i,roll_d);
+			print(400, 40, "Mode: Stab  Ail: %6.3f  Elev: %6.3f",ap_roll,ap_nick);
+			print(400, 55, "Nick P:%5.2f I:%5.2f D:%5.2f  Roll P:%5.2f I:%5.2f D:%5.2f",nick_p,nick_i,nick_d,roll_p,roll_i,roll_d);
 		}
 		else
 		{
@@ -406,13 +406,14 @@ int main(int argc, char** argv) {
 		}
 
 
-		print(10, 55, "Timecode %.2f", tick);
+		print(10, 55, "%.2f",  sqrtf(acc_x*acc_x+acc_y*acc_y+acc_z*acc_z));
+		print(10, 70, "Timecode %.2f", tick);
 
 		SDL_GL_SwapBuffers();
 
 		Uint32 lastFrame = SDL_GetTicks(); 
-		if((((tick*1000)-lastFrame)-tick_diff) > 0)
-			SDL_Delay(((tick*1000)-lastFrame)-tick_diff);
+		//if((((tick*1000)-lastFrame)-tick_diff) > 0)
+		//	SDL_Delay(((tick*1000)-lastFrame)-tick_diff);
 
 	}
 
